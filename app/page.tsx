@@ -12,7 +12,13 @@ export default function Home() {
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
-        const plaintextPod = data.queryresult.pods.find(pod => pod.title === 'Plaintext');
+        interface pod{
+          title: string;
+          subpods: {
+            text: string;
+          }[];
+        }
+        const plaintextPod = data.queryresult.pods.find((pod:pod) => pod.title === 'Plaintext');
         if (plaintextPod) {
           setResult(plaintextPod.subpods[0].text);
         } else {
