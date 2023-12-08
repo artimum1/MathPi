@@ -3,27 +3,15 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [result, setResult] = useState("hi");
-  const apiKey = 'ULG5AW-KT3VKHJ7P7';
-  const input = 'solve x^2 + 5x + 6 = 0';
+ const input = 'solve x^2 + 5x + 6 = 0';
 
   useEffect(() => {
-    const apiUrl = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(input)}&format=plaintext&output=JSON&appid=${apiKey}`;
+    const apiUrl = `https://mathpi-api.artimum.repl.co/api/wolfram?input=${encodeURIComponent(input)}`;
 
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
-        interface pod{
-          title: string;
-          subpods: {
-            text: string;
-          }[];
-        }
-        const plaintextPod = data.queryresult.pods.find((pod:pod) => pod.title === 'Plaintext');
-        if (plaintextPod) {
-          setResult(plaintextPod.subpods[0].text);
-        } else {
-          setResult("No result found");
-        }
+        setResult(JSON.stringify(data, null, 2));      
       })
       .catch(error => {
         console.error('Error fetching Wolfram Alpha API:', error);
