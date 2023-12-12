@@ -1,27 +1,41 @@
-"use client"
-import { useState, useEffect } from "react";
+"use client";
+import React, { useState } from "react";
 
 export default function Home() {
-  const [result, setResult] = useState("hi");
- const input = 'solve x^2 + 5x + 6 = 0';
+  const [inputValue, setInputValue] = useState('');
+  const [fullres, setFullRes]:any = useState([]);
 
-  useEffect(() => {
-    const apiUrl = `https://mathpi-api.artimum.repl.co/api/wolfram?input=${encodeURIComponent(input)}`;
+  const handleInputChange = (e:any) => {
+    setInputValue(e.target.value);
+  };
 
-    fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-        setResult(JSON.stringify(data, null, 2));      
-      })
-      .catch(error => {
-        console.error('Error fetching Wolfram Alpha API:', error);
-        setResult(`Error fetching data: ${error.message}`);
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+    let apiUrl = `https://mathpi-api.artimum.repl.co/api/wolfram?input=solve ${encodeURIComponent(inputValue)}`;
+
+    let res = await fetch(apiUrl, { cache: "no-cache" });
+    let data = await res.json();
+    console.log(data);
+
+    if (data.queryresult && data.queryresult.pods && data.queryresult.pods.length > 0) {
+      let result = data.queryresult.pods[1].subpods.map((solution:any, index:any) => {
+        return <span key={index}>{` ${solution.plaintext},`}</span>;
       });
-  }, []); // Empty dependency array to run the effect only once on mount
+      setFullRes(result);
+    } else {
+      // If no pods found, display a message
+      setFullRes(<span>No result found</span>);
+    }
+  };
 
   return (
-    <div id="result">
-      {result}
+    <div>
+      {fullres}
+      <br />
+      <input type="text" value={inputValue} onChange={handleInputChange}></input>
+      <button onClick={handleSubmit} type="submit">
+        submit
+      </button>
     </div>
   );
 }
