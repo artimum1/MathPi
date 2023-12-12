@@ -1,9 +1,10 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
-  const [fullres, setFullRes]:any = useState([]);
+  const [fullRes, setFullRes]:any = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e:any) => {
     setInputValue(e.target.value);
@@ -11,31 +12,58 @@ export default function Home() {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    setFullRes([]); // Clear old results when starting a new query
+
     let apiUrl = `https://mathpi-api.artimum.repl.co/api/wolfram?input=solve ${encodeURIComponent(inputValue)}`;
 
-    let res = await fetch(apiUrl, { cache: "no-cache" });
-    let data = await res.json();
-    console.log(data);
+    try {
+      let res = await fetch(apiUrl, { cache: "no-cache" });
+      let data = await res.json();
+      console.log(data);
 
-    if (data.queryresult && data.queryresult.pods && data.queryresult.pods.length > 0) {
-      let result = data.queryresult.pods[1].subpods.map((solution:any, index:any) => {
-        return <span key={index}>{` ${solution.plaintext},`}</span>;
-      });
-      setFullRes(result);
-    } else {
-      // If no pods found, display a message
-      setFullRes(<span>No result found</span>);
+      if (data.queryresult && data.queryresult.pods && data.queryresult.pods.length > 0) {
+        let result = data.queryresult.pods[1].subpods.map((solution:any, index:any) => {
+          return <div className="result" key={index}><span>{` ${solution.plaintext},`}</span></div>;
+        });
+        setFullRes(result);
+      } else {
+        setFullRes(<div className="result" key="no-result"><span>No result found</span></div>);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e:any) => {
+    // Check if the pressed key is "Enter"
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevents the default behavior of the Enter key (form submission)
+      fetchData();
     }
   };
 
   return (
-    <div>
-      {fullres}
-      <br />
-      <input type="text" value={inputValue} onChange={handleInputChange}></input>
-      <button onClick={handleSubmit} type="submit">
-        submit
-      </button>
+    <div className="page">
+      <form className="form" onSubmit={handleSubmit}>
+        <input className="inputField" type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyDown}></input>
+      </form>
+      <div>
+        
+      </div>
+      <div className="box">
+        <div className="head"><div className="plainText">Result</div></div>
+    <div className="result">
+    {loading && <div>Loading...</div>}
+      {fullRes}
+    </div>
+    </div>
     </div>
   );
 }
