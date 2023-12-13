@@ -24,7 +24,7 @@ body{
 .form{
     display: flex;
     justify-content: center;
-    width: 30%;
+    width: 500px;
 }
 
 .inputField{
@@ -46,7 +46,7 @@ body{
 .box{
     margin-top: 50px;
     border: 1px white solid;
-    width: 30%;
+    width: 500px;
     height: fit-content;
 }
 .result{
@@ -74,4 +74,10 @@ body{
 }
 .plainText{
     margin-left: 10px;
+}
+
+@media only screen and (max-width:700px){
+    .form , .box{
+        width: 80%;
+    }
 }

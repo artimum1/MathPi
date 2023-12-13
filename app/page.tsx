@@ -24,7 +24,7 @@ export default function Home() {
     try {
       let res = await fetch(apiUrl, { cache: "no-cache" });
       let data = await res.json();
-
+      console.log(data)
       if (data.queryresult && data.queryresult.pods && data.queryresult.pods.length > 0) {
         let result = data.queryresult.pods[1].subpods.map((solution:any, index:any) => {
           return <div className="result" key={index}><div>{` ${solution.plaintext},`}<br></br></div></div>;
