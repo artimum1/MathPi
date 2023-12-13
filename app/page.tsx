@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <div className="page">
       <form className="form" onSubmit={handleSubmit}>
-        <input id="inputField" className="inputField" type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyDown}></input>
+        <input placeholder="Type something" id="inputField" className="inputField" type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyDown}></input>
       </form>
       <div>
         
