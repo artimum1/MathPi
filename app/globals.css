@@ -10,7 +10,6 @@ body{
     background-color: black;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 
 
 }
@@ -54,6 +53,23 @@ body{
     display: flex;
     align-items: center;
     padding: 10px;
+    width: 95%;
+    overflow-wrap: break-word; /* Break at word boundaries */
+      word-break: break-all; /* Break words at any character */
+
+}
+.displayment{
+    padding: 1px;
+}
+.mathdis{
+    min-height: 60px;
+    width: 100%;
+
+
+}
+#calculator{
+    overflow: hidden;
+    border-top: 1px white solid;
 
 }
 .plainText{

@@ -24,11 +24,10 @@ export default function Home() {
     try {
       let res = await fetch(apiUrl, { cache: "no-cache" });
       let data = await res.json();
-      console.log(data);
 
       if (data.queryresult && data.queryresult.pods && data.queryresult.pods.length > 0) {
         let result = data.queryresult.pods[1].subpods.map((solution:any, index:any) => {
-          return <div className="result" key={index}><span>{` ${solution.plaintext},`}</span></div>;
+          return <div className="result" key={index}><div>{` ${solution.plaintext},`}<br></br></div></div>;
         });
         setFullRes(result);
       } else {
@@ -52,18 +51,25 @@ export default function Home() {
   return (
     <div className="page">
       <form className="form" onSubmit={handleSubmit}>
-        <input className="inputField" type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyDown}></input>
+        <input id="inputField" className="inputField" type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyDown}></input>
       </form>
       <div>
         
       </div>
       <div className="box">
         <div className="head"><div className="plainText">Result</div></div>
-    <div className="result">
-    {loading && <div>Loading...</div>}
-      {fullRes}
+    <div className="displayment">
+
+    <div className="mathdis">
+    {loading && <div className="result">Loading...</div>}
+    {fullRes}
+    </div>
+
+    <div id="calculator" style={{width:"100%",height: "300px" }}></div>
+
     </div>
     </div>
+
     </div>
   );
 }
